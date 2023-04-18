@@ -39,6 +39,13 @@ def main(
     prompter = Prompter(prompt_template)
     tokenizer = LlamaTokenizer.from_pretrained(base_model)
 
+    model = LlamaForCausalLM.from_pretrained(
+        base_model,
+        load_in_8bit=load_8bit,
+        torch_dtype=torch.float16,
+        device_map="auto",
+    )
+
 
     if device == "cuda":
         model = LlamaForCausalLM.from_pretrained(
@@ -117,4 +124,5 @@ def main(
     )
 
 if __name__ == "__main__":
-    fire.Fire(main)
+    # fire.Fire(main)
+    main()
