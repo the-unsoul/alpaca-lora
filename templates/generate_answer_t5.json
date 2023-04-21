@@ -1,0 +1,6 @@
+{
+  "description": "Template to generate answer base on a context by the-unsoul",
+  "prompt_input": "Below is an instruction that describes a context. Answer 3 questions from input, with details base on the provided context.\n\n### Instruction:\n {instruction}\n\n### Input:\n{input} \n\n### Response:\n",
+  "prompt_no_input": "Below is an instruction that describes a context. Answer 3 questions from input, with details base on the provided context.\n\n### Instruction:\n {instruction}\n\n### Input:\n{input} \n\n### Response:\n",
+  "response_split": "### Response:"
+}
