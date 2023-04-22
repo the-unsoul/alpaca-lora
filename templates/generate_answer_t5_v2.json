@@ -1,0 +1,6 @@
+{
+  "description": "Template to generate answer base on a context by the-unsoul",
+  "prompt_input":"### Instruction:\nBelow is a Description which describes a context. Use the context to answer all the questions.\n\n### Description:\nWithin Flowbird. {instruction}\n\n### Questions:\n{input} \n\n### Answers:\n",
+  "prompt_no_input":"",
+  "response_split": "### Response:"
+}

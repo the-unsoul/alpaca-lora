@@ -10,11 +10,32 @@ class NotebookUtil():
 
 
 
+    # def t5_generate(prompt, tokenizer, base_model):
+    #     input_ids = tokenizer(prompt, return_tensors="pt").input_ids.to("cuda")
+    #     t5_output = base_model.generate(input_ids, max_length=612)
+    #     return tokenizer.decode(t5_output[0], skip_special_tokens=True)
+
     def t5_generate(prompt, tokenizer, base_model):
         input_ids = tokenizer(prompt, return_tensors="pt").input_ids.to("cuda")
-        t5_output = base_model.generate(input_ids, max_length=612)
+
+        # default config
+        # t5_output = base_model.generate(
+        #     input_ids,
+        #     max_length=612
+        # )
+
+        # testing new config
+        t5_output = base_model.generate(
+            input_ids,
+            max_length=612,
+            # max_new_tokens=612,
+            min_length=30,
+            top_p=0.95
+        )
         return tokenizer.decode(t5_output[0], skip_special_tokens=True)
 
+    def print_wrap(text, width=110):
+        print(NotebookUtil.wrap_text_preserve_newlines(text, width=110))
 
     def wrap_text_preserve_newlines(text, width=110):
         # Split the input text into lines based on newline characters
@@ -54,17 +75,10 @@ class NotebookUtil():
         return dataset
 
 
-    def save_dataset(dataset_path, dataset):
+    def save_dataset(dataset_name, dataset):
+        dataset_path = osp.join('../dataset/', f"{dataset_name}.json")
         with open(dataset_path, 'w') as fp:
             json.dump(dataset, fp, ensure_ascii=False, indent=2)
-
-
-    def extract_response(text: str, model_type='alpaca'):
-        if model_type == 'alpaca':
-            splitted = text.split('### Response:\n')
-            return splitted[1].strip()
-
-        print('TODO: adds support for t5-flan')
 
 
     def fix_encoding_output(text: str):
@@ -77,16 +91,63 @@ class NotebookUtil():
         return text
 
 
-    def response_to_array(text: str):
-        splitter_pattern = r"^\d.\s{3}"
-        responses_cleand = re.split(splitter_pattern, text, 0, re.MULTILINE);
-        return responses_cleand
+    def extract_response(text: str, model_type='alpaca'):
+        if model_type == 'alpaca':
+            splitted = text.split('### Response:\n')
+            return splitted[1].strip()
+
+        if model_type == 'flan' or model_type == 't5':
+            return text
 
 
-    def t5_generate(prompt, tokenizer, base_model):
-        input_ids = tokenizer(prompt, return_tensors="pt").input_ids.to("cuda")
-        t5_output = base_model.generate(input_ids, max_length=612)
-        return tokenizer.decode(t5_output[0], skip_special_tokens=True)
+    def response_to_array(text: str, model_type='alpaca'):
+        if model_type == 'alpaca':
+            splitter_pattern = r"^\d\.\s{3}"
+
+        if model_type == 'flan' or model_type == 't5':
+            splitter_pattern = r"\d\.\s{1}"
+
+        response_array = re.split(splitter_pattern, text, 0, re.MULTILINE);
+        response_array = list(filter(None, response_array))
+        for i, response in enumerate(response_array):
+            response_array[i] = f"{i+1}. " + response
+
+        return response_array
+
+    def question_answer_to_dataset(questions, answers, dataset):
+        for i, q in enumerate(questions):
+            question = NotebookUtil.strip_bulletin(questions[i])
+            answer = NotebookUtil.strip_bulletin(answers[i])
+            data = {
+                "instruction": question,
+                "input": "In context of Flowbird Group",
+                "output": answer
+            }
+            dataset.append(data);
+
+        return dataset
+
+
+    def strip_bulletin(text: str, model_type=None):
+        bulletin_pattern = r"^\d\.\s+"
+
+        if model_type == 'alpaca':
+            bulletin_pattern = r"^\d\.\s{3}"
+
+        if model_type == 'flan' or model_type == 't5':
+            bulletin_pattern = r"\d\.\s{1,3}"
+
+        text = text.strip()
+        text = re.sub(bulletin_pattern, '', text)
+        return text
+
+    def print_json(data):
+        print(json.dumps(data, indent=4))
+
+
+
+
+
 
 
 

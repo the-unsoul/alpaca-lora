@@ -1,0 +1,6 @@
+{
+  "description": "Template to generate questions by the-unsoul",
+  "prompt_input": "### Instruction:\nBelow is a Description which describes a context. Generate {input} questions for the context.\n\n### Description:\nWithin Flowbird. {instruction}\n\n### Response:\n",
+  "prompt_no_input": "### Instruction:\nBelow is a Description which describes a context. Generate 3 questions for the context.\n\n### Description:\nWithin Flowbird. {instruction}\n\n### Response:\n",
+  "response_split": "### Response:"
+}

@@ -12,5 +12,11 @@
     {
       "path": "../alpaca.cpp"
     }
-  ]
+  ],
+  "settings": {
+    "yaml.schemas": {
+      "file:///home/uns/.vscode-server/extensions/atlassian.atlascode-3.0.3/resources/schemas/pipelines-schema.json": "bitbucket-pipelines.yml",
+      "https://raw.githubusercontent.com/DavidAnson/markdownlint/main/schema/markdownlint-config-schema.json": "untitled:Untitled-1"
+    }
+  }
 }
